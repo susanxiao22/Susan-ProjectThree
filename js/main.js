@@ -43,7 +43,7 @@ function playAnimation(frame1, frame2, speed = 400) {
 }
 
 // =========================
-// 💬 TYPING EFFECT (INTERRUPTIBLE)
+// 💬 TYPING EFFECT
 // =========================
 function typeDialogue(text, speed = 50) {
   if (typingInterval) clearInterval(typingInterval);
@@ -112,24 +112,33 @@ function setState(newState) {
 }
 
 // =========================
-// 📊 NEEDS
+// 📊 NEEDS SYSTEM
 // =========================
+let hunger = 0;
+const MAX_HUNGER = 100;
+const HUNGRY_THRESHOLD = 60;
+
 let isHungry = false;
 let isSleepy = false;
 
-function randomNeeds() {
-  // Hunger (priority)
-  if (Math.random() < 0.4 && !isHungry && currentState !== STATES.SLEEPING) {
+// Hunger increases over time
+setInterval(() => {
+  hunger += 5;
+  if (hunger > MAX_HUNGER) hunger = MAX_HUNGER;
+
+  if (hunger >= HUNGRY_THRESHOLD && !isHungry && currentState !== STATES.SLEEPING) {
     isHungry = true;
 
     typeDialogue("I'm getting hungry...", 50);
     setState(STATES.HUNGRY);
   }
 
-  // Sleepy (no animation yet)
+}, 3000);
+
+// Random sleepy
+function randomNeeds() {
   if (Math.random() < 0.4 && !isSleepy && currentState !== STATES.SLEEPING) {
     isSleepy = true;
-
     typeDialogue("I'm getting sleepy...", 50);
   }
 }
@@ -137,12 +146,12 @@ function randomNeeds() {
 setInterval(randomNeeds, 10000);
 
 // =========================
-// 👁️ BLINKING (ONLY IDLE)
+// 👁️ BLINKING (RESTORED)
 // =========================
 function blink() {
   if (currentState !== STATES.NORMAL) return;
 
-  pet.src = "img/blink.png";
+  pet.src = "../img/blink.png"; 
 
   setTimeout(() => {
     if (currentState === STATES.NORMAL) {
@@ -151,6 +160,7 @@ function blink() {
   }, 150);
 }
 
+// Frequent blinking (like your original)
 setInterval(() => {
   if (Math.random() < 0.8) {
     blink();
@@ -161,6 +171,9 @@ setInterval(() => {
 // 🎮 BUTTONS
 // =========================
 document.getElementById("feed").onclick = () => {
+  hunger -= 30;
+  if (hunger < 0) hunger = 0;
+
   isHungry = false;
 
   typeDialogue("Yum!", 30);
