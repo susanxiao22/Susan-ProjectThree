@@ -1,6 +1,3 @@
-// =========================
-// 🧠 STATES
-// =========================
 const STATES = {
   NORMAL: "normal",
   HAPPY: "happy",
@@ -11,13 +8,10 @@ const STATES = {
 let currentState = STATES.NORMAL;
 let previousState = STATES.NORMAL;
 
-// =========================
-// 🐣 ELEMENTS
-// =========================
+
 const pet = document.getElementById("pet");
 const moodText = document.getElementById("mood");
 
-// Name popup elements
 const popup = document.getElementById("name-popup");
 const input = document.getElementById("pet-name-input");
 const startBtn = document.getElementById("start-btn");
@@ -90,9 +84,9 @@ function typeDialogue(text, speed = 50) {
 function blink() {
   if (currentState !== STATES.NORMAL) return;
 
-  pet.src = "img/blink.png";
+  pet.src = "..img/blink.png";
   setTimeout(() => {
-    if (currentState === STATES.NORMAL) pet.src = "img/normal.png";
+    if (currentState === STATES.NORMAL) pet.src = "..img/normal.png";
   }, 150);
 }
 
@@ -113,11 +107,11 @@ function setState(newState) {
 
   switch (newState) {
     case STATES.NORMAL:
-      setSprite("img/normal.png");
+      setSprite("..img/normal.png");
       break;
 
     case STATES.HAPPY:
-      setSprite("img/happy.png");
+      setSprite("..img/happy.png");
 
       setTimeout(() => {
         if (currentState === STATES.HAPPY) {
@@ -128,11 +122,11 @@ function setState(newState) {
       break;
 
     case STATES.HUNGRY:
-      playAnimation("img/hungry.png", "img/hungry2.png", 500);
+      playAnimation("..img/hungry.png", "..img/hungry2.png", 500);
       break;
 
     case STATES.SLEEPING:
-      playAnimation("img/sleep.png", "img/sleep2.png", 600);
+      playAnimation("..img/sleep.png", "..img/sleep2.png", 600);
 
       setTimeout(() => {
         if (currentState === STATES.SLEEPING) setState(STATES.NORMAL);
@@ -146,7 +140,7 @@ function setState(newState) {
 // =========================
 function startGame() {
   petName = input.value.trim();
-  if (petName === "") petName = "Buddy"; // default
+  if (petName === "") petName = "Taiyu"; // default
   localStorage.setItem("petName", petName);
   popup.style.display = "none";
 
@@ -175,7 +169,6 @@ function randomNeeds() {
     setState(STATES.HUNGRY);
   }
 
-  // Randomly sleepy
   if (Math.random() < 0.4 && !isSleepy && currentState !== STATES.SLEEPING) {
     isSleepy = true;
     typeDialogue(`${petName} is getting sleepy...`, 50);
@@ -184,9 +177,6 @@ function randomNeeds() {
 
 setInterval(randomNeeds, 10000);
 
-// =========================
-// 🎮 BUTTON INTERACTIONS
-// =========================
 document.getElementById("feed").onclick = () => {
   hunger -= 30;
   if (hunger < 0) hunger = 0;
