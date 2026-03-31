@@ -11,11 +11,30 @@ const STATES = {
 let currentState = STATES.NORMAL;
 let previousState = STATES.NORMAL;
 
+// =========================
+// 🐣 ELEMENTS
+// =========================
 const pet = document.getElementById("pet");
 const moodText = document.getElementById("mood");
 
-let animInterval = null;
-let typingInterval = null;
+// Name popup elements
+const popup = document.getElementById("name-popup");
+const input = document.getElementById("pet-name-input");
+const startBtn = document.getElementById("start-btn");
+
+// =========================
+// 💾 STATE VARIABLES
+// =========================
+let animInterval = null;       // controls sprite animation
+let typingInterval = null;     // controls typing effect
+let hunger = 0;
+const MAX_HUNGER = 100;
+const HUNGRY_THRESHOLD = 60;
+let isHungry = false;
+let isSleepy = false;
+
+// Load saved pet name
+let petName = localStorage.getItem("petName") || "";
 
 // =========================
 // 🎞️ ANIMATION HELPERS
@@ -66,6 +85,22 @@ function typeDialogue(text, speed = 50) {
 }
 
 // =========================
+// 👁️ BLINKING (only idle NORMAL state)
+// =========================
+function blink() {
+  if (currentState !== STATES.NORMAL) return;
+
+  pet.src = "img/blink.png";
+  setTimeout(() => {
+    if (currentState === STATES.NORMAL) pet.src = "img/normal.png";
+  }, 150);
+}
+
+setInterval(() => {
+  if (Math.random() < 0.8) blink();
+}, 2000);
+
+// =========================
 // 🔁 STATE MACHINE
 // =========================
 function setState(newState) {
@@ -86,11 +121,8 @@ function setState(newState) {
 
       setTimeout(() => {
         if (currentState === STATES.HAPPY) {
-          if (isHungry) {
-            setState(STATES.HUNGRY);
-          } else {
-            setState(STATES.NORMAL);
-          }
+          if (isHungry) setState(STATES.HUNGRY);
+          else setState(STATES.NORMAL);
         }
       }, 1200);
       break;
@@ -103,98 +135,79 @@ function setState(newState) {
       playAnimation("img/sleep.png", "img/sleep2.png", 600);
 
       setTimeout(() => {
-        if (currentState === STATES.SLEEPING) {
-          setState(STATES.NORMAL);
-        }
+        if (currentState === STATES.SLEEPING) setState(STATES.NORMAL);
       }, 4000);
       break;
   }
 }
 
 // =========================
-// 📊 NEEDS SYSTEM
+// 🐣 NAME POPUP HANDLER
 // =========================
-let hunger = 0;
-const MAX_HUNGER = 100;
-const HUNGRY_THRESHOLD = 60;
+function startGame() {
+  petName = input.value.trim();
+  if (petName === "") petName = "Buddy"; // default
+  localStorage.setItem("petName", petName);
+  popup.style.display = "none";
 
-let isHungry = false;
-let isSleepy = false;
+  typeDialogue(`Hi! I'm ${petName}!`, 40);
+}
 
-// Hunger increases over time
-setInterval(() => {
+startBtn.onclick = startGame;
+
+// Press ENTER to submit
+input.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") startGame();
+});
+
+// =========================
+// 🔲 RANDOM NEEDS
+// =========================
+function randomNeeds() {
+  // Increase hunger slowly
   hunger += 5;
   if (hunger > MAX_HUNGER) hunger = MAX_HUNGER;
 
+  // Trigger hungry
   if (hunger >= HUNGRY_THRESHOLD && !isHungry && currentState !== STATES.SLEEPING) {
     isHungry = true;
-
-    typeDialogue("I'm getting hungry...", 50);
+    typeDialogue(`${petName} is getting hungry...`, 50);
     setState(STATES.HUNGRY);
   }
 
-}, 3000);
-
-// Random sleepy
-function randomNeeds() {
+  // Randomly sleepy
   if (Math.random() < 0.4 && !isSleepy && currentState !== STATES.SLEEPING) {
     isSleepy = true;
-    typeDialogue("I'm getting sleepy...", 50);
+    typeDialogue(`${petName} is getting sleepy...`, 50);
   }
 }
 
 setInterval(randomNeeds, 10000);
 
 // =========================
-// 👁️ BLINKING (RESTORED)
-// =========================
-function blink() {
-  if (currentState !== STATES.NORMAL) return;
-
-  pet.src = "../img/blink.png"; 
-
-  setTimeout(() => {
-    if (currentState === STATES.NORMAL) {
-      pet.src = "img/normal.png";
-    }
-  }, 150);
-}
-
-// Frequent blinking (like your original)
-setInterval(() => {
-  if (Math.random() < 0.8) {
-    blink();
-  }
-}, 2000);
-
-// =========================
-// 🎮 BUTTONS
+// 🎮 BUTTON INTERACTIONS
 // =========================
 document.getElementById("feed").onclick = () => {
   hunger -= 30;
   if (hunger < 0) hunger = 0;
-
   isHungry = false;
 
-  typeDialogue("Yum!", 30);
+  typeDialogue(`Yum!`, 30);
   setState(STATES.HAPPY);
-
   clickAnim();
 };
 
 document.getElementById("play").onclick = () => {
-  typeDialogue("Yay!", 30);
+  typeDialogue(`Yay!`, 30);
   setState(STATES.HAPPY);
-
   clickAnim();
 };
 
 document.getElementById("sleep").onclick = () => {
   isSleepy = false;
 
-  typeDialogue("Zzz...", 30);
+  typeDialogue(`Zzz...`, 30);
   setState(STATES.SLEEPING);
-
   clickAnim();
 };
 

@@ -122,6 +122,58 @@ body {
   animation: blink 1s step-start infinite;
 }
 
+/* Overlay background */
+#name-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000;
+}
+
+/* Box */
+.name-box {
+  background: white;
+  border: 4px solid #333;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 6px 0 #333;
+
+  width: 250px;
+  font-family: sans-serif;
+}
+
+/* Input */
+#pet-name-input {
+  width: 90%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 2px solid #333;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Button */
+#start-btn {
+  padding: 6px 12px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background: #f4efc3;
+  cursor: pointer;
+}
+
+#start-btn:active {
+  transform: scale(0.95);
+}
+
 @keyframes blink {
   0%, 50% { opacity: 1; }
   50.1%, 100% { opacity: 0; }
