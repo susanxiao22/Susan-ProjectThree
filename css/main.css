@@ -106,12 +106,25 @@ body {
   font-family: sans-serif;
 
   /* 👇 new: control spacing */
-  margin-top: 10px; /* smaller gap */
+  margin-top: 15px; /* smaller gap */
 }
 
 #mood {
   margin: 0;
   font-size: 16px;
+}
+
+/* Blinking cursor */
+#mood::after {
+  content: '|';
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  50.1%, 100% { opacity: 0; }
 }
 
 @media (max-width: 600px) {
