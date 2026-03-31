@@ -68,7 +68,7 @@ document.getElementById("sleep").onclick = () => {
 function clickAnim() {
   gsap.fromTo(pet,
     { scale: 1 },
-    { scale: 1.15, duration: 0.2, yoyo: true, repeat: 1 }
+    { scale: 1.10, duration: 0.2, yoyo: true, repeat: 1 }
   );
 }
 
