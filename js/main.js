@@ -84,9 +84,9 @@ function typeDialogue(text, speed = 50) {
 function blink() {
   if (currentState !== STATES.NORMAL) return;
 
-  pet.src = "..img/blink.png";
+  pet.src = "img/blink.png";
   setTimeout(() => {
-    if (currentState === STATES.NORMAL) pet.src = "..img/normal.png";
+    if (currentState === STATES.NORMAL) pet.src = "img/normal.png";
   }, 150);
 }
 
@@ -107,11 +107,11 @@ function setState(newState) {
 
   switch (newState) {
     case STATES.NORMAL:
-      setSprite("..img/normal.png");
+      setSprite("img/normal.png");
       break;
 
     case STATES.HAPPY:
-      setSprite("..img/happy.png");
+      setSprite("img/happy.png");
 
       setTimeout(() => {
         if (currentState === STATES.HAPPY) {
@@ -122,11 +122,11 @@ function setState(newState) {
       break;
 
     case STATES.HUNGRY:
-      playAnimation("..img/hungry.png", "..img/hungry2.png", 500);
+      playAnimation("img/hungry.png", "img/hungry2.png", 500);
       break;
 
     case STATES.SLEEPING:
-      playAnimation("..img/sleep.png", "..img/sleep2.png", 600);
+      playAnimation("img/sleep.png", "img/sleep2.png", 600);
 
       setTimeout(() => {
         if (currentState === STATES.SLEEPING) setState(STATES.NORMAL);
