@@ -71,3 +71,4 @@ function clickAnim() {
     { scale: 1.15, duration: 0.2, yoyo: true, repeat: 1 }
   );
 }
+
